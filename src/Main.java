@@ -1,3 +1,10 @@
+//package def;
+
+import controller.CashierController;
+import controller.CookController;
+import models.*;
+import clients.*;
+
 
 public class Main {
 
@@ -33,6 +40,11 @@ public class Main {
 			co2.start();
 			co3.start(); 
 			co4.start();
+			
+			//BaseClient testClient = new BaseClient();
+			//BaseClient testClient1 = new BaseClient();
+			CashierClient cashierClient = new CashierClient(400,500, "Cashier 1"); 
+			CashierClient cashierClient1 = new CashierClient(400,500, "Cashier 2");
 			
 			while(RestaurantOpen)
 			{
