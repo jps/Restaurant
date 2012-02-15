@@ -15,8 +15,8 @@ public class Main {
 		Boolean RestaurantOpen = true;
 		
 			Cashier ca1 = new Cashier("Tom","Taylor");
-			Cashier ca2 = new Cashier("Ben","Thomas");
-			Cashier ca3 = new Cashier("Nick","Cage");
+			Cashier ca2 = new Cashier("Nick","Cage");
+			Cashier ca3 = new Cashier("Chris","Davis");
 			
 			CashierController.INSTANCE.CashierSignIn(ca1);
 			CashierController.INSTANCE.CashierSignIn(ca2);
@@ -43,8 +43,13 @@ public class Main {
 			
 			//BaseClient testClient = new BaseClient();
 			//BaseClient testClient1 = new BaseClient();
-			CashierClient cashierClient = new CashierClient(400,500, "Cashier 1"); 
-			CashierClient cashierClient1 = new CashierClient(400,500, "Cashier 2");
+			CashierClient cashierClient = new CashierClient(0,0,200,410, "Cashier 1"); 
+			CashierClient cashierClient1 = new CashierClient(220,0,200,410, "Cashier 2");
+			
+			CookClient cookClient = new CookClient(0,420,200, 410, "cookClientTest");
+			CookClient cookClient2 = new CookClient(220,420,200, 410, "cookClientTest2");
+			
+			ServerClient serverClient = new ServerClient(450,0,750,410,"Server");
 			
 			while(RestaurantOpen)
 			{
