@@ -14,15 +14,15 @@ public class Main {
 	public static void main(String[] args) {
 		Boolean RestaurantOpen = true;
 		
-			Cashier ca1 = new Cashier("Tom","Taylor");
+			
 			Cashier ca2 = new Cashier("Nick","Cage");
 			Cashier ca3 = new Cashier("Chris","Davis");
 			
-			CashierController.INSTANCE.CashierSignIn(ca1);
+			
 			CashierController.INSTANCE.CashierSignIn(ca2);
 			CashierController.INSTANCE.CashierSignIn(ca3);
 			
-			ca1.start();
+
 			ca2.start();
 			ca3.start();
 			
@@ -43,13 +43,17 @@ public class Main {
 			
 			//BaseClient testClient = new BaseClient();
 			//BaseClient testClient1 = new BaseClient();
-			CashierClient cashierClient = new CashierClient(0,0,200,410, "Cashier 1"); 
-			CashierClient cashierClient1 = new CashierClient(220,0,200,410, "Cashier 2");
+			@SuppressWarnings("unused")
+			CashierGUI cashierGUI = new CashierGUI(0,0,200,410, "Cashier 1"); 
+			@SuppressWarnings("unused")
+			CashierGUI cashierClient1 = new CashierGUI(220,0,200,410, "Cashier 2");
 			
-			CookClient cookClient = new CookClient(0,420,200, 410, "cookClientTest");
-			CookClient cookClient2 = new CookClient(220,420,200, 410, "cookClientTest2");
+			@SuppressWarnings("unused")
+			CookGUI cookGUI = new CookGUI(0,420,200, 410, "cookClientTest");
+			@SuppressWarnings("unused")
+			CookGUI cookClient2 = new CookGUI(220,420,200, 410, "cookClientTest2");
 			
-			ServerClient serverClient = new ServerClient(450,0,750,410,"Server");
+			//ServerGUI serverGUI = new ServerGUI(450,0,750,410,"Server");
 			
 			while(RestaurantOpen)
 			{

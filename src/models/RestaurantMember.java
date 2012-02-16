@@ -2,6 +2,10 @@ package models;
 
 public class RestaurantMember extends Member {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String FirstName; 
 	private String SecondName;
 	private boolean LoggedIn;

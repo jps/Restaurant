@@ -1,5 +1,5 @@
 package models;
-import java.util.Enumeration;
+import java.util.Date;
 
 import controller.OrderController;
 import enumerations.OrderStatus;
@@ -10,6 +10,8 @@ public class Order {
 	private long OrderNumber;
 	private OrderStatus OrderStatus;
 	private Cashier Cashier;
+	private Date CookedAt;
+	
 		
 	Order(Cashier cashier){
 		OrderNumber = OrderController.INSTANCE.getNextOrderNumber();
@@ -54,4 +56,16 @@ public class Order {
 		System.out.println("Order:" + getOrderNumber() + " has " + action + ".");
 	}
 	
+	public void setCookedAtNow()
+	{
+		CookedAt  = new Date(); 
+	}
+	
+	public Date getCookedAt()
+	{
+		return CookedAt; 
+	}
+	
+	
 }
+	

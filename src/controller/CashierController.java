@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-import models.Order;
 import models.Cashier;
 
 public enum CashierController {
@@ -21,22 +20,34 @@ public enum CashierController {
 		return generator.nextInt(5001);
 	}
 	
-	public void CashierSignIn(Cashier cashier){
+	public boolean CashierSignIn(Cashier cashier){
+		
+		for(Cashier c : Cashiers)
+		{
+			if(c.getId() == cashier.getId())
+			{
+				return false;
+			}
+		}
+		
 		cashier.setLoggedIn();
 		Cashiers.add(cashier);
+		return true; 
 	}
 	
-	public void CashierSignOut(Cashier cashier){
-		Cashiers.remove(cashier); 
+	public boolean CashierSignOut(Cashier cashier){
+		return Cashiers.remove(cashier); 
 	}
 	
+	
+	/*
 	public void ReturnCompletedOrder(Cashier cashier, Order order)
 	{
 		if(Cashiers.contains(cashier))
 			cashier.addItemToFinishedOrders(order);
 		else
 			Cashiers.get(generator.nextInt(Cashiers.size())).addItemToFinishedOrders(order);			
-	}
+	}*/
 	
 	/*public void DayStart()
 	{

@@ -1,90 +1,110 @@
-/**
- * 
- */
 package clients;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.List;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JScrollPane;
+import sockets.*;
 
-/**
- * @author Administrator
- *
- */
-public class CashierClient  {
+import models.Order;
+import models.Passable;
+import protocol.cashierProtocol;
 
-	/**
-	 * 
-	 */
-	
-	private static int H = 400;
-	private static int W = 200;
-	protected JFrame frame;// = new JFrame();
-	private static JList pendingList;
-	private static JLabel TestLabel; 
-	
-	public CashierClient() {
-		this(W,H, "Restaurant");
-	}
 
-	/**
-	 * @param Height
-	 * @param Width
-	 */
-	public CashierClient(int Height, int Width, String Name) {
-		this(0,0, Height, Width, Name);
-	}
+import models.Cashier;
+
+public class CashierClient extends Thread {
+
 	
+	private Queue<Object> OutQueue = new ConcurrentLinkedQueue<Object>();
 	
-	public CashierClient(int X, int Y, int Height, int Width, String Name) {
-		Init( X, Y, Height, Width, Name);
-	}
-	
-	private void Init(int X, int Y, int Width, int Height, String Name)
+	public void AddObjectToOutQueue(Object obj)
 	{
-		//1. Create the frame.
-		
-	    frame = new JFrame(Name); 
-		frame.setName(Name);
-		//frame.setSize(Width,Height);
-		frame.setBounds(X, Y, Width, Height);
-		Dimension minSize = new Dimension();
-		minSize.setSize(Width,Height);
-		frame.setMinimumSize(minSize);
-		//2. Optional: What happens when the frame closes?
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setBackground(new Color(205,92,92));
-		frame.setLayout(null);
-		//3. Create components and put them in the frame.
-		
-		pendingList = new JList();
-		JScrollPane pendingScroller = new JScrollPane(pendingList);
-		pendingScroller.setBounds(25, 60, 150, 300);
-	    frame.add(pendingScroller);
-		
-	    
-	    TestLabel = new JLabel("Test Label");
-	    TestLabel.setBounds(0, 0, 150, 300);
-	    TestLabel.setForeground(Color.BLACK);
-		frame.add(TestLabel);
+		OutQueue.add(obj);
+	}
+	/**
+	 * @param args
+	 * @throws  
+	 */
+	public static void main(String[] args) throws IOException {
+		// TODO Auto-generated method stub
 		
 		
+		@SuppressWarnings("unused")
+		CashierGUI cashierGUI = new CashierGUI(0,0,200,410, "Cashier 1"); 
+		Cashier ca1 = new Cashier("Tom","Taylor");
+		//CashierController.INSTANCE.CashierSignIn(ca1);
+		//ca1.start();
 		
-		// TODO Auto-generated constructor stub
-		
-		//4. Size the frame.
-		
-		frame.pack();
+		 	Socket RSocket = null;
+		    ObjectOutputStream out = null;
+		    ObjectInputStream in = null;
+			
+	        try {
+	            RSocket = new Socket("PandaLaptop",40044);
+	            out = new ObjectOutputStream(RSocket.getOutputStream());
+	            in = new ObjectInputStream(RSocket.getInputStream());
+	            //in = new BufferedReader(new ObjectStreamReader(RSocket.getInputStream()));
+	        } catch (UnknownHostException e) {
+	            System.err.println("Don't know about host: PandaLaptop.");
+	            System.exit(1);
+	        } catch (IOException e) {
+	            System.err.println("Couldn't get I/O for the connection to: PandaLaptop.");
+	            System.exit(1);
+	        }
+	        
+	        InputQueue inQueue = new InputQueue(in);
+	        OutputQueue outQueue = new OutputQueue(out);
+	        
 
-		//5. Show it.
-	    frame.setVisible(true);
-		
+	        Object fromServer;
+	        Object fromUser;
+	        
+	   
+	        
+	        
+	        inQueue.run();
+	        outQueue.run();
+	        //out.flush();
+			
+	      //try and sign in 
+	        outQueue.addObjcetToOutQueue(ca1);
+	        
+			
+	        while (true) {
+	        	//System.out.println("passed line sign in");
+	        	fromServer = null;
+	        	fromServer = inQueue.GetNextItemFromQueue();
+	        	
+				if(fromServer != null)
+				{
+					if(fromServer instanceof String)
+						if( fromServer.equals("SignedIn"))
+						{
+							System.out.print("Signed in");
+							ca1.setLoggedIn();
+							ca1.start(); //start the cashier server
+						}
+	        			if (fromServer.equals("Bye.")) //server is closing
+	        				break;
+		            fromUser = cashierProtocol.processInput(fromServer);
+	        		if (fromUser != null) {
+		                System.out.println("Client: " + fromUser);
+		                outQueue.addObjcetToOutQueue(fromUser);
+		        	}
+		        }
+	        }
+		 
+	        out.close();
+	        in.close();
+	        RSocket.close();
+		}
+
 	}
 
-}

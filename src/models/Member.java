@@ -1,9 +1,14 @@
 package models;
+import java.io.Serializable;
 import java.util.UUID;
 
 
-public class Member extends Thread{
+public class Member extends Thread implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private UUID Identity;
 	
 	public Member()

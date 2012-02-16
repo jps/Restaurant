@@ -1,6 +1,7 @@
 package models;
 
-import java.util.ArrayList;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import controller.CashierController;
 import controller.OrderController;
@@ -9,7 +10,12 @@ import enumerations.OrderStatus;
 
 public class Cashier extends RestaurantMember {
 	
-	private ArrayList<Order> CompletedOrders = new ArrayList<Order>(); 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	//private ArrayList<Order> CompletedOrders = new ArrayList<Order>(); 
+	private Queue<Order> CompletedOrders = new ConcurrentLinkedQueue<Order>(); 
 	public Cashier(String firstName, String secondName) {
 		super(firstName, secondName);
 		setName("Cashier:"+firstName+' '+secondName);
@@ -44,20 +50,31 @@ public class Cashier extends RestaurantMember {
 	
 	public void checkFinishedOrders()
 	{
+		//populate the list
+		
+		for(@SuppressWarnings("unused")
+		int i = 10; 1 < 10; i--)//get up to 10 completed orders 
+		{
+			Order order = OrderController.INSTANCE.GetCookedOrder(this);
+			if(order == null)
+				break; //returns null if none present so break
+			
+			CompletedOrders.add(order);
+		}
+		
 		if(!CompletedOrders.isEmpty())
 		{	
-			for(Order order : CompletedOrders)
+			while(!CompletedOrders.isEmpty())
 			{
-				order.setOrderStatus(OrderStatus.completed);
-				CashierMessage("completed an order");		
-				CompletedOrders.remove(order);
+				Order completedOrder = CompletedOrders.poll();
+				completedOrder.setOrderStatus(OrderStatus.completed);
+				OrderController.INSTANCE.AddOrderToFinished(completedOrder);
 			}
 		}else
 		{
 			CashierMessage("no completed orders");
 		}
-			
-	}
+	}	
 	
 	public void addItemToFinishedOrders(Order order)
 	{

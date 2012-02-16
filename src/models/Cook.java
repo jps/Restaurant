@@ -5,6 +5,11 @@ import enumerations.OrderStatus;
 
 public class Cook extends RestaurantMember {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public Cook(String firstName, String secondName) {
 		super(firstName, secondName);
 		setName("Cook:"+firstName+' '+secondName);
@@ -46,6 +51,8 @@ public class Cook extends RestaurantMember {
 					e.printStackTrace();
 				}
 				order.setOrderStatus(OrderStatus.cooked);	
+				order.setCookedAtNow();
+				OrderController.INSTANCE.AddOrderToCooked(order);
 			}
 		}
 		//TODO: if they still have incomplete orders do something

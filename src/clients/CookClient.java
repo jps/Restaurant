@@ -1,83 +1,62 @@
-/**
- * 
- */
 package clients;
 
-import javax.swing.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
 
-import java.awt.*;
-import java.awt.event.*;
 
-/**
- * @author Administrator
- *
- */
+
 public class CookClient {
-
-
+	
 	/**
 	 * @param args
 	 */
-	
-	private static int H = 300;
-	private static int W = 400;
-	protected JFrame frame;// = new JFrame();
-	private JLabel TestLabel;
-	private JList pendingList;
-	
-	
-	public CookClient()
-	{
-		//empty constructor
-		this(W,H, "Restaurant");
-	}
-	
-	public CookClient(int Width, int Height, String Name)
-	{
-		this(0,0,Width, Height, Name);
-	}
-	
-	public CookClient(int X, int Y, int Width, int Height, String Name)
-	{
-		Init(X,Y,Width,Height,Name);
-	}
-	
+	public static void main(String[] args) throws IOException {
 
-	protected void Init(int X, int Y ,int Width, int Height, String Name)
-	{
-		//1. Create the frame.
+		CookGUI cookGUI = new CookGUI(0,420,200, 410, "cookClientTest");
 		
-	    frame = new JFrame(Name); 
-		frame.setName(Name);
-		//frame.setSize(Width,Height);
-		frame.setBounds(X, Y, Width, Height);
-		Dimension minSize = new Dimension();
-		minSize.setSize(Width,Height);
-		frame.setMinimumSize(minSize);
-		frame.setBounds(X, Y,Width,Height);
-		frame.getContentPane().setBackground(new Color(152,251,152));
 		
-		//2. Optional: What happens when the frame closes?
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		//3. Create components and put them in the frame.
 		
-		pendingList = new JList();
-		JScrollPane pendingScroller = new JScrollPane(pendingList);
-		pendingScroller.setBounds(25, 60, 150, 300);
-	    frame.add(pendingScroller);
-	    
-		//...create emptyLabel...
+	    Socket RSocket = null;
+	    PrintWriter out = null;
+	    BufferedReader in = null;
 		
-		TestLabel = new JLabel("Test Label");
-		frame.add(TestLabel, BorderLayout.CENTER);
-
-		//4. Size the frame.
+        try {
+            RSocket = new Socket("PandaLaptop",40044);
+            out = new PrintWriter(RSocket.getOutputStream(), true);
+            in = new BufferedReader(new InputStreamReader(RSocket.getInputStream()));
+        } catch (UnknownHostException e) {
+            System.err.println("Don't know about host: PandaLaptop.");
+            System.exit(1);
+        } catch (IOException e) {
+            System.err.println("Couldn't get I/O for the connection to: PandaLaptop.");
+            System.exit(1);
+        }
+        
+        BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
+        String fromServer;
+        String fromUser;
+ 
+        while ((fromServer = in.readLine()) != null) {
+            System.out.println("Server: " + fromServer);
+            if (fromServer.equals("Bye."))
+                break;
+             
+            fromUser = stdIn.readLine();
+        if (fromUser != null) {
+                System.out.println("Client: " + fromUser);
+                out.println(fromUser);
+        	}
+        }
+ 
+        out.close();
+        in.close();
+        stdIn.close();
+        RSocket.close();
 		
-		frame.pack();
-
-		//5. Show it.
-	    frame.setVisible(true);
 	}
-	
+
 }
