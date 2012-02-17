@@ -3,6 +3,8 @@ package models;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import clients.CashierClient;
+
 import controller.CashierController;
 import controller.OrderController;
 //import java.util.List;
@@ -15,10 +17,15 @@ public class Cashier extends RestaurantMember {
 	 */
 	private static final long serialVersionUID = 1L;
 	//private ArrayList<Order> CompletedOrders = new ArrayList<Order>(); 
+	private transient CashierClient cashierClient; 
+	
+	
 	private Queue<Order> CompletedOrders = new ConcurrentLinkedQueue<Order>(); 
-	public Cashier(String firstName, String secondName) {
+	public Cashier(String firstName, String secondName, CashierClient client) {
 		super(firstName, secondName);
 		setName("Cashier:"+firstName+' '+secondName);
+		cashierClient = client;
+		
 	}
 
 	
@@ -44,7 +51,8 @@ public class Cashier extends RestaurantMember {
 	public void takeOrder()
 	{
 		Order order = new Order(this);
-		OrderController.INSTANCE.AddOrderToQueue(order);
+		cashierClient.outQueue.OutQueue.add(order);
+		//OrderController.INSTANCE.AddOrderToQueue(order);
 		CashierMessage("taken an order");
 	}
 	

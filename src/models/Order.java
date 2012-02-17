@@ -1,11 +1,12 @@
 package models;
+import java.io.Serializable;
 import java.util.Date;
 
 import controller.OrderController;
 import enumerations.OrderStatus;
 
 
-public class Order {
+public class Order implements Serializable {
 
 	private long OrderNumber;
 	private OrderStatus OrderStatus;
@@ -16,8 +17,7 @@ public class Order {
 	Order(Cashier cashier){
 		OrderNumber = OrderController.INSTANCE.getNextOrderNumber();
 		setOrderStatus(enumerations.OrderStatus.pending);
-		setCashier(cashier);
-		
+		setCashier(cashier);		
 	}
 	
 	Order(long orderNumber){

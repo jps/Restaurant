@@ -5,6 +5,7 @@ import models.Cook;
 import models.Order;
 
 import controller.*;
+import enumerations.OrderStatus;
 
 public class RestaurantProtocol {
 	
@@ -57,8 +58,27 @@ public class RestaurantProtocol {
 			
 		}else if( obj instanceof Order)
 		{
+			Order order = (Order) obj; 
+			OrderStatus status = order.getOrderStatus();
 			
 			
+			if(status == enumerations.OrderStatus.pending)
+			{
+				OrderController.INSTANCE.AddOrderToQueue(order);
+				System.out.println("order added to server waiting for cooking queue");
+			}else if(status == enumerations.OrderStatus.preperation)
+			{
+				System.out.println("order status is preperations when is this occouring ???");
+			}else if(status == enumerations.OrderStatus.cooked)
+			{
+				OrderController.INSTANCE.AddOrderToCooked(order);
+				System.out.println("order added to server cooked queue");
+			}else if(status == enumerations.OrderStatus.completed)
+			{
+				OrderController.INSTANCE.AddOrderToFinished(order);
+				System.out.println("order has been added to the server finished list");
+			}
+						
 		}
 		
 		

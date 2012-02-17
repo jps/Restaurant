@@ -15,16 +15,16 @@ public class Main {
 		Boolean RestaurantOpen = true;
 		
 			
-			Cashier ca2 = new Cashier("Nick","Cage");
-			Cashier ca3 = new Cashier("Chris","Davis");
+			//Cashier ca2 = new Cashier("Nick","Cage");
+			//Cashier ca3 = new Cashier("Chris","Davis");
 			
 			
-			CashierController.INSTANCE.CashierSignIn(ca2);
-			CashierController.INSTANCE.CashierSignIn(ca3);
+			//CashierController.INSTANCE.CashierSignIn(ca2);
+			//CashierController.INSTANCE.CashierSignIn(ca3);
 			
 
-			ca2.start();
-			ca3.start();
+			//ca2.start();
+			//ca3.start();
 			
 			Cook co1 = new Cook("James", "Spencer");
 			Cook co2 = new Cook("Alice", "Stringer");

@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class InputQueue extends Thread {
 
-	private Queue<Object> InQueue = new ConcurrentLinkedQueue<Object>();
+	public Queue<Object> InQueue = new ConcurrentLinkedQueue<Object>();
 	private ObjectInputStream InStream;
 	
 	public InputQueue(ObjectInputStream inStream)
@@ -15,9 +15,9 @@ public class InputQueue extends Thread {
 		InStream = inStream;
 	}
 	
-	public Object GetNextItemFromQueue()
+	public synchronized Object GetNextItemFromQueue()
 	{
-		return InQueue.peek();
+		return InQueue.poll();
 	}
 	
 	public void run()
@@ -25,6 +25,7 @@ public class InputQueue extends Thread {
 		while(true)
 		{
 			try {
+				System.out.println("checking input queue");
 				Object in = null;
 				in = InStream.readObject();
 				if( in != null)

@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class OutputQueue extends Thread {
 
-	private Queue<Object> OutQueue = new ConcurrentLinkedQueue<Object>();
+	public Queue<Object> OutQueue = new ConcurrentLinkedQueue<Object>();
 	private ObjectOutputStream OutputStream;
 	
 	public OutputQueue(ObjectOutputStream out)
@@ -15,21 +15,23 @@ public class OutputQueue extends Thread {
 		OutputStream = out; 
 	}
 	
-	public void addObjcetToOutQueue(Object obj)
+	public synchronized void addObjcetToOutQueue(Object obj)
 	{
+		System.out.println("object added to queue");
 		OutQueue.add(obj);
-		this.interrupt();
+		//this.interrupt();
 	}
 	
 	public void run()
 	{
 		while(true)
 		{
-			
+			//System.out.println("checking output stream");
 			if(OutQueue.size() != 0)
 			{
 				Object obj = OutQueue.poll();
 				try {
+					System.out.println("trying to write object");
 					OutputStream.writeObject(obj);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -37,12 +39,13 @@ public class OutputQueue extends Thread {
 				}
 			}else
 			{
+				/*
 				try {
-					this.wait();
+					//todo: wait here;
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
+				}*/
 			}
 		}
 		

@@ -21,24 +21,32 @@ import models.Cashier;
 
 public class CashierClient extends Thread {
 
+	public InputQueue inQueue;
+	public OutputQueue outQueue;
+	//private Queue<Object> OutQueue = new ConcurrentLinkedQueue<Object>();
 	
-	private Queue<Object> OutQueue = new ConcurrentLinkedQueue<Object>();
-	
-	public void AddObjectToOutQueue(Object obj)
+	/*public void AddObjectToOutQueue(Object obj)
 	{
 		OutQueue.add(obj);
-	}
+	}*/
 	/**
+	 * @throws IOException 
 	 * @param args
 	 * @throws  
 	 */
 	public static void main(String[] args) throws IOException {
 		// TODO Auto-generated method stub
 		
+		new CashierClient("Tom", "Taylor");
 		
+	}
+	
+	
+	public CashierClient(String FirstName, String SecondName) throws IOException 
+	{
 		@SuppressWarnings("unused")
 		CashierGUI cashierGUI = new CashierGUI(0,0,200,410, "Cashier 1"); 
-		Cashier ca1 = new Cashier("Tom","Taylor");
+		Cashier ca1 = new Cashier(FirstName,SecondName, this);
 		//CashierController.INSTANCE.CashierSignIn(ca1);
 		//ca1.start();
 		
@@ -59,8 +67,8 @@ public class CashierClient extends Thread {
 	            System.exit(1);
 	        }
 	        
-	        InputQueue inQueue = new InputQueue(in);
-	        OutputQueue outQueue = new OutputQueue(out);
+	        inQueue = new InputQueue(in);
+	        outQueue = new OutputQueue(out);
 	        
 
 	        Object fromServer;
@@ -69,12 +77,12 @@ public class CashierClient extends Thread {
 	   
 	        
 	        
-	        inQueue.run();
-	        outQueue.run();
+	        inQueue.start();
+	        outQueue.start();
 	        //out.flush();
 			
 	      //try and sign in 
-	        outQueue.addObjcetToOutQueue(ca1);
+	        outQueue.OutQueue.add(ca1); //addObjcetToOutQueue(ca1);
 	        
 			
 	        while (true) {
@@ -96,7 +104,7 @@ public class CashierClient extends Thread {
 		            fromUser = cashierProtocol.processInput(fromServer);
 	        		if (fromUser != null) {
 		                System.out.println("Client: " + fromUser);
-		                outQueue.addObjcetToOutQueue(fromUser);
+		                outQueue.OutQueue.add(fromUser);
 		        	}
 		        }
 	        }
@@ -105,6 +113,7 @@ public class CashierClient extends Thread {
 	        in.close();
 	        RSocket.close();
 		}
-
 	}
+
+	
 
