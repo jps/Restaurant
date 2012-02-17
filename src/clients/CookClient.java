@@ -3,31 +3,49 @@ package clients;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import protocol.CookProtocol;
+import protocol.cashierProtocol;
+
+import models.Cook;
+
+import sockets.InputQueue;
+import sockets.OutputQueue;
 
 
-public class CookClient {
+
+public class CookClient extends Thread{
 	
+	public InputQueue inQueue;
+	public OutputQueue outQueue;
+	public CookGUI cookGUI; 
+
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) throws IOException {
-
-		CookGUI cookGUI = new CookGUI(0,420,200, 410, "cookClientTest");
-		
-		
-		
+		new CookClient("Amber", "Ryan");
+	}
+	
+	public CookClient(String FirstName, String SecondName) throws IOException
+	{
+		cookGUI = new CookGUI(0,420,200, 410, "cookClientTest");
+		Cook cook = new Cook(FirstName, SecondName);
 	    Socket RSocket = null;
-	    PrintWriter out = null;
-	    BufferedReader in = null;
+		ObjectOutputStream out = null;
+		ObjectInputStream in = null;
+	    //PrintWriter out = null;
+	    //BufferedReader in = null;
 		
         try {
             RSocket = new Socket("PandaLaptop",40044);
-            out = new PrintWriter(RSocket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(RSocket.getInputStream()));
+            out = new ObjectOutputStream(RSocket.getOutputStream());
+			in = new ObjectInputStream(RSocket.getInputStream());
         } catch (UnknownHostException e) {
             System.err.println("Don't know about host: PandaLaptop.");
             System.exit(1);
@@ -36,27 +54,42 @@ public class CookClient {
             System.exit(1);
         }
         
-        BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
-        String fromServer;
-        String fromUser;
+        inQueue = new InputQueue(in);
+		outQueue = new OutputQueue(out);
+  
+        
+        //BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
+        Object fromServer;
+        Object fromUser;
  
-        while ((fromServer = in.readLine()) != null) {
-            System.out.println("Server: " + fromServer);
-            if (fromServer.equals("Bye."))
-                break;
-             
-            fromUser = stdIn.readLine();
-        if (fromUser != null) {
-                System.out.println("Client: " + fromUser);
-                out.println(fromUser);
+        while(true){
+        	fromServer = inQueue.GetNextItemFromQueue();
+        	if(fromServer != null)
+        	{
+        		if(fromServer instanceof String)
+        		{
+        			if (fromServer.equals("SignedIn")) {
+						System.out.print("Signed in");
+						cook.setLoggedIn();
+						cook.start();
+        			}
+        			if (fromServer.equals("Bye."))
+                        break;
+        		}
+        		fromUser = CookProtocol.processInput(fromServer);
+				if (fromUser != null) {
+					System.out.println("Client: " + fromUser);
+					outQueue.OutQueue.add(fromUser);
+				}
         	}
         }
- 
+         
         out.close();
         in.close();
-        stdIn.close();
-        RSocket.close();
-		
+        RSocket.close();	
 	}
+	
+	
+
 
 }
