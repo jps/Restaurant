@@ -8,6 +8,10 @@ import enumerations.OrderStatus;
 
 public class Order implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private long OrderNumber;
 	private OrderStatus OrderStatus;
 	private Cashier Cashier;

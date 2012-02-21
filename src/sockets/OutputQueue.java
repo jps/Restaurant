@@ -9,45 +9,36 @@ public class OutputQueue extends Thread {
 
 	public Queue<Object> OutQueue = new ConcurrentLinkedQueue<Object>();
 	private ObjectOutputStream OutputStream;
-	
-	public OutputQueue(ObjectOutputStream out)
-	{
-		OutputStream = out; 
+
+	public OutputQueue(ObjectOutputStream out) {
+		OutputStream = out;
 	}
-	
-	public synchronized void addObjcetToOutQueue(Object obj)
-	{
+
+	public synchronized void addObjcetToOutQueue(Object obj) {
 		System.out.println("object added to queue");
 		OutQueue.add(obj);
-		//this.interrupt();
+		this.notify();
 	}
-	
-	public void run()
-	{
-		while(true)
-		{
-			//System.out.println("checking output stream");
-			if(OutQueue.size() != 0)
-			{
+
+	public synchronized void run() {
+		while (true) {
+			// System.out.println("checking output stream");
+			if (OutQueue.size() != 0) {
 				Object obj = OutQueue.poll();
 				try {
 					System.out.println("trying to write object");
 					OutputStream.writeObject(obj);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			}else
-			{
-				/*
+			} else {
 				try {
-					//todo: wait here;
+					this.wait(500);//this has solved a massive cpu hit
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}*/
+				}
 			}
 		}
-		
+
 	}
 }

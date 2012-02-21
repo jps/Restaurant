@@ -10,6 +10,7 @@ public class RestaurantMember extends Member {
 	private String SecondName;
 	private boolean LoggedIn;
 	
+	
 	RestaurantMember(String firstName, String secondName)
 	{
 		super();

@@ -9,39 +9,30 @@ public class InputQueue extends Thread {
 
 	public Queue<Object> InQueue = new ConcurrentLinkedQueue<Object>();
 	private ObjectInputStream InStream;
-	
-	public InputQueue(ObjectInputStream inStream)
-	{
+
+	public InputQueue(ObjectInputStream inStream) {
 		InStream = inStream;
 	}
-	
-	public synchronized Object GetNextItemFromQueue()
-	{
+
+	public synchronized Object GetNextItemFromQueue() {
 		return InQueue.poll();
 	}
-	
-	public void run()
-	{
-		while(true)
-		{
+
+	public void run() {
+		while (true) {
 			try {
 				System.out.println("checking input queue");
 				Object in = null;
 				in = InStream.readObject();
-				if( in != null)
+				if (in != null)
 					InQueue.add(in);
-				
-				
-				
 			} catch (IOException e) {
-				
 				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
-			
+
 				e.printStackTrace();
-			}	
+			}
 		}
 	}
-	
-	
+
 }

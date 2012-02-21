@@ -2,16 +2,12 @@ package clients;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.util.Queue;
-
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 
 import controller.OrderController;
-
-import models.Order;
 
 public class ServerGUI {
 
@@ -20,17 +16,17 @@ public class ServerGUI {
 	protected JFrame frame;// = new JFrame();
 
 	private JLabel pendingLabel;
-	private JLabel cookingLabel;
+    //private JLabel cookingLabel;
 	private JLabel cookedLabel;
 	private JLabel finishedLabel;
 
 	private JList pendingList; // those waiting to be cooked
-	private JList cookingList; // those that are being cooked
+	//private JList cookingList; // those that are being cooked
 	private JList cookedList; // those that are being cooked
 	private JList finishedList; // those that are being cooked
 
 	private JScrollPane pendingScroller;
-	private JScrollPane cookingScroller;
+	//private JScrollPane cookingScroller;
 	private JScrollPane cookedScroller;
 	private JScrollPane finishedScroller;
 
@@ -66,7 +62,7 @@ public class ServerGUI {
 		// 3. Create components and put them in the frame.
 
 		pendingList = new JList();
-		cookingList = new JList();
+		//cookingList = new JList();
 		cookedList = new JList();
 		finishedList = new JList();
 
@@ -74,9 +70,9 @@ public class ServerGUI {
 		pendingScroller.setBounds(25, 60, 150, 300);
 		frame.add(pendingScroller);
 
-		cookingScroller = new JScrollPane(cookingList);
-		cookingScroller.setBounds(200, 60, 150, 300);
-		frame.add(cookingScroller);
+		//cookingScroller = new JScrollPane(cookingList);
+		//cookingScroller.setBounds(200, 60, 150, 300);
+		//frame.add(cookingScroller);
 
 		cookedScroller = new JScrollPane(cookedList);
 		cookedScroller.setBounds(375, 60, 150, 300);
@@ -94,11 +90,11 @@ public class ServerGUI {
 		// pendingLabel.setForeground(Color.LIGHT_GRAY);
 		frame.add(pendingLabel);
 
-		cookingLabel = new JLabel("Being Cooked");
-		cookingLabel.setBounds(200, 25, 150, 20);
+		//cookingLabel = new JLabel("Being Cooked");
+		//cookingLabel.setBounds(200, 25, 150, 20);
 		// cookingLabel.setOpaque(true);
 		// cookingLabel.setForeground(Color.LIGHT_GRAY);
-		frame.add(cookingLabel);
+		//frame.add(cookingLabel);
 
 		cookedLabel = new JLabel("Cooked");
 		cookedLabel.setBounds(375, 25, 150, 20);
@@ -122,9 +118,9 @@ public class ServerGUI {
 	}
 
 	public void update() {
-		pendingList
-				.setListData(OrderController.INSTANCE.GetPendingStringList());
-		cookedList.setListData(OrderController.INSTANCE.GetPendingStringList());
+		pendingList.setListData(OrderController.INSTANCE.GetPendingStringList());
+		cookedList.setListData(OrderController.INSTANCE.GetCookedStringList());
+		finishedList.setListData(OrderController.INSTANCE.GetFinishedStringList());
 	}
 
 }

@@ -1,6 +1,10 @@
 package models;
-import controller.CookController;
-import controller.OrderController;
+
+import java.util.Queue;
+import java.util.Random;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
+import clients.CookClient;
 import enumerations.OrderStatus;
 
 public class Cook extends RestaurantMember {
@@ -9,58 +13,68 @@ public class Cook extends RestaurantMember {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private transient CookClient cookClient;
 
-	public Cook(String firstName, String secondName) {
+	// This list should never really get long as it is just a mechanism for
+	// ensuring orders arn't lost
+	private Queue<Order> WaitingOrders = new ConcurrentLinkedQueue<Order>();
+
+	public Cook(String firstName, String secondName, CookClient CookClient) {
 		super(firstName, secondName);
-		setName("Cook:"+firstName+' '+secondName);
+		setName("Cook:" + firstName + ' ' + secondName);
+		cookClient = CookClient;
+
 	}
 	
-	public void run()
+	
+	public synchronized void addToWaiting(Order order)
+	{
+		WaitingOrders.add(order);
+		this.notifyAll();
+	}
+	
+	public synchronized void run()
 	{
 		CookMessage("been started");
 		while(getLoggedIn())
 		{
 			
-			//refactor
-			Order order = OrderController.INSTANCE.GetNextItemOffQueue();
+			Order order = WaitingOrders.poll();
+			
 			if(order == null)
 			{
-				CookMessage("no current orders");
-				//thread will now wait for 7 seconds
-				/*
+				//request a new order
+				cookClient.outQueue.OutQueue.add("CookOrderRequest");
 				try {
-					wait((long)7000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}*/
-				//TODO: would be nice to do this with wait
-				try {
-					sleep(CookController.INSTANCE.GetRandomWaitTime());
+					wait();
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}else{
-				//return item to cashier
-				CookMessage("has taken item off queue");
-				order.setOrderStatus(OrderStatus.preperation);
-				//prepare the item
 				try {
-					sleep(CookController.INSTANCE.GetRandomWaitTime());
+					wait(GetRandomWaitTime());
 				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				order.setOrderStatus(OrderStatus.cooked);	
 				order.setCookedAtNow();
-				OrderController.INSTANCE.AddOrderToCooked(order);
+				order.setOrderStatus(OrderStatus.cooked);
+				cookClient.outQueue.OutQueue.add(order);//pass back to server
 			}
 		}
 		//TODO: if they still have incomplete orders do something
 	}
-	
-	public void CookMessage(String action)
-	{
-		System.out.println("Cook:"+ this.getMemberName() + " has " + action + ".");
+
+	public void CookMessage(String action) {
+		System.out.println("Cook:" + this.getMemberName() + " has " + action
+				+ ".");
 	}
 	
+	public int GetRandomWaitTime() {
+		Random generator = new Random();
+		return generator.nextInt(7001);
+	}
+	
+
 }

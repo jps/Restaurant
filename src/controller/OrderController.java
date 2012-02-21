@@ -5,9 +5,9 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 import java.util.Queue;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import models.Cashier;
 import models.Order;
 
 public enum OrderController {
@@ -47,12 +47,12 @@ public enum OrderController {
 		Cooked.add(order);
 	}
 
-	public Order GetCookedOrder(Cashier cashier) {
+	public Order GetCookedOrder(UUID Identity) {
 		Calendar now = Calendar.getInstance();
 		now.add(Calendar.SECOND, -60);
 
 		for (Order i : Cooked) {
-			if (i.getCashier() == cashier) {
+			if (i.getCashier().getIdentity() == Identity) {
 				Cooked.remove(i);
 				return i;
 
@@ -81,7 +81,7 @@ public enum OrderController {
 		List<Order> orderList = new ArrayList<Order>(OrderQueue);
 		String[] ostrings = new String[orderList.size()];
 		for (int i = 0; i < orderList.size(); i++) {
-			ostrings[i] = orderList.get(i).toString();
+			ostrings[i] = String.valueOf(orderList.get(i).getOrderNumber());
 		}
 		return ostrings;
 	}
@@ -90,9 +90,18 @@ public enum OrderController {
 		List<Order> cooked = new ArrayList<Order>(Cooked);
 		String[] cstrings = new String[cooked.size()];
 		for (int i = 0; i < cooked.size(); i++) {
-			cstrings[i] = cooked.get(i).toString();
+			cstrings[i] = String.valueOf(cooked.get(i).getOrderNumber());
 		}
 		return cstrings;
+	}
+
+	public String[] GetFinishedStringList() {
+		List<Order> finished = new ArrayList<Order>(FinishedOrders);
+		String[] fstrings = new String[FinishedOrders.size()];
+		for (int i = 0; i < finished.size(); i++) {
+			fstrings[i] = String.valueOf(finished.get(i).getOrderNumber());
+		}
+		return fstrings;
 	}
 
 }

@@ -1,7 +1,5 @@
 //package def;
 
-import controller.CashierController;
-import controller.CookController;
 import models.*;
 import clients.*;
 
@@ -26,20 +24,20 @@ public class Main {
 			//ca2.start();
 			//ca3.start();
 			
-			Cook co1 = new Cook("James", "Spencer");
-			Cook co2 = new Cook("Alice", "Stringer");
-			Cook co3 = new Cook("Amber", "Ryan");
-			Cook co4 = new Cook("Joel", "Herber");		
+			//Cook co2 = new Cook("Alice", "Stringer");
+			//Cook co1 = new Cook("James", "Spencer");
+			//Cook co3 = new Cook("Amber", "Ryan");
+			//Cook co4 = new Cook("Joel", "Herber");		
 					
-			CookController.INSTANCE.CookSignIn(co1);
-			CookController.INSTANCE.CookSignIn(co2);
-			CookController.INSTANCE.CookSignIn(co3);
-			CookController.INSTANCE.CookSignIn(co4);
-			
-			co1.start();
-			co2.start();
-			co3.start(); 
-			co4.start();
+			//CookController.INSTANCE.CookSignIn(co1);
+			//CookController.INSTANCE.CookSignIn(co2);
+			//CookController.INSTANCE.CookSignIn(co3);
+			//CookController.INSTANCE.CookSignIn(co4);
+			//
+			//co1.start();
+			//co2.start();
+			//co3.start(); 
+			//co4.start();
 			
 			//BaseClient testClient = new BaseClient();
 			//BaseClient testClient1 = new BaseClient();

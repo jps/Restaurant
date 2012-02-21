@@ -1,12 +1,13 @@
 package models;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Queue;
+import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import clients.CashierClient;
 
-import controller.CashierController;
-import controller.OrderController;
 //import java.util.List;
 import enumerations.OrderStatus;
 
@@ -19,7 +20,7 @@ public class Cashier extends RestaurantMember {
 	//private ArrayList<Order> CompletedOrders = new ArrayList<Order>(); 
 	private transient CashierClient cashierClient; 
 	
-	
+	private List<Order> FinishedOrders = new ArrayList<Order>();
 	private Queue<Order> CompletedOrders = new ConcurrentLinkedQueue<Order>(); 
 	public Cashier(String firstName, String secondName, CashierClient client) {
 		super(firstName, secondName);
@@ -29,7 +30,7 @@ public class Cashier extends RestaurantMember {
 	}
 
 	
-	public void run()
+	public synchronized void run()
 	{
 		CashierMessage("been started");
 		while(getLoggedIn())
@@ -40,7 +41,7 @@ public class Cashier extends RestaurantMember {
 			checkFinishedOrders();
 			
 			try {
-				sleep(CashierController.INSTANCE.GetRandomWaitTime());
+				 wait(GetRandomWaitTime());
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -60,6 +61,29 @@ public class Cashier extends RestaurantMember {
 	{
 		//populate the list
 		
+		Order order = CompletedOrders.poll();
+		if (order != null)
+		{
+			//proccess order add to this cashiers completed and also send back to the sever for it's completed list
+			order.setOrderStatus(OrderStatus.completed);
+			FinishedOrders.add(order);
+			cashierClient.outQueue.OutQueue.add(order);
+		}else{
+			//try and get more completed orders
+			cashierClient.outQueue.OutQueue.add(this.getIdentity());			
+		}
+	}
+		
+
+	
+	public int GetRandomWaitTime()
+	{
+		Random generator = new Random();	
+		return generator.nextInt(5001);
+	}
+		
+		
+		/*
 		for(@SuppressWarnings("unused")
 		int i = 10; 1 < 10; i--)//get up to 10 completed orders 
 		{
@@ -81,15 +105,15 @@ public class Cashier extends RestaurantMember {
 		}else
 		{
 			CashierMessage("no completed orders");
-		}
-	}	
+		}*/
+
 	
-	public void addItemToFinishedOrders(Order order)
+	public synchronized void addItemToFinishedOrders(Order order)
 	{
 		CompletedOrders.add(order);
 	}
 	
-	public void removeItemFromFinishedOrders(Order order)
+	public synchronized void removeItemFromFinishedOrders(Order order)
 	{
 		CompletedOrders.remove(order);
 	}
