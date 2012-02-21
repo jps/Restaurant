@@ -21,7 +21,7 @@ public class ServerClient {
 
 	public ServerClient() throws IOException {
 		// @SuppressWarnings("unused")
-		serverGUI = new ServerGUI(450, 0, 750, 410, "Server");
+		serverGUI = new ServerGUI(450, 0, 860, 410, "Server");
 
 		ServerSocket serverSocket = null;
 		boolean listening = true;

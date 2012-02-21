@@ -2,6 +2,8 @@ package clients;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
+
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -12,7 +14,7 @@ import controller.OrderController;
 public class ServerGUI {
 
 	private static int H = 410;
-	private static int W = 750;
+	private static int W = 1000;
 	protected JFrame frame;// = new JFrame();
 
 	private JLabel pendingLabel;
@@ -67,7 +69,7 @@ public class ServerGUI {
 		finishedList = new JList();
 
 		pendingScroller = new JScrollPane(pendingList);
-		pendingScroller.setBounds(25, 60, 150, 300);
+		pendingScroller.setBounds(25, 60, 260, 300);
 		frame.add(pendingScroller);
 
 		//cookingScroller = new JScrollPane(cookingList);
@@ -75,17 +77,20 @@ public class ServerGUI {
 		//frame.add(cookingScroller);
 
 		cookedScroller = new JScrollPane(cookedList);
-		cookedScroller.setBounds(375, 60, 150, 300);
+		cookedScroller.setBounds(295, 60, 260, 300);
 		frame.add(cookedScroller);
 
 		finishedScroller = new JScrollPane(finishedList);
-		finishedScroller.setBounds(550, 60, 150, 300);
+		finishedScroller.setBounds(560, 60, 260, 300);
 		frame.add(finishedScroller);
 
 		// ...create emptyLabel...
 
+		Font font = new Font("Verdana", Font.BOLD, 15);
+		
 		pendingLabel = new JLabel("Pending Orders");
 		pendingLabel.setBounds(25, 25, 150, 20);
+		pendingLabel.setFont(font);
 		// pendingLabel.setOpaque(true);
 		// pendingLabel.setForeground(Color.LIGHT_GRAY);
 		frame.add(pendingLabel);
@@ -97,14 +102,16 @@ public class ServerGUI {
 		//frame.add(cookingLabel);
 
 		cookedLabel = new JLabel("Cooked");
-		cookedLabel.setBounds(375, 25, 150, 20);
+		cookedLabel.setBounds(295, 25, 150, 20);
+		cookedLabel.setFont(font);
 		// cookedLabel.setOpaque(true);
 		// cookedLabel.setHorizontalAlignment(400);
 		// cookedLabel.setForeground(Color.LIGHT_GRAY);
 		frame.add(cookedLabel);
 
 		finishedLabel = new JLabel("Finished Orders");
-		finishedLabel.setBounds(550, 25, 150, 20);
+		finishedLabel.setBounds(560, 25, 150, 20);
+		finishedLabel.setFont(font);
 		// finishedLabel.setOpaque(true);
 		// finishedLabel.setForeground(Color.LIGHT_GRAY);
 		frame.add(finishedLabel);

@@ -1,6 +1,7 @@
 package models;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.UUID;
 
 import controller.OrderController;
 import enumerations.OrderStatus;
@@ -12,7 +13,7 @@ public class Order implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private long OrderNumber;
+	private UUID OrderNumber;
 	private OrderStatus OrderStatus;
 	private Cashier Cashier;
 	private Date CookedAt;
@@ -24,12 +25,12 @@ public class Order implements Serializable {
 		setCashier(cashier);		
 	}
 	
-	Order(long orderNumber){
+	Order(UUID orderNumber){
 		setOrderStatus(enumerations.OrderStatus.pending);
 		OrderNumber = orderNumber;
 	}
 		
-	public long getOrderNumber() {
+	public UUID getOrderNumber() {
 		return OrderNumber;
 	}
 

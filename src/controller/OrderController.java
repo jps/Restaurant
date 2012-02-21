@@ -23,14 +23,13 @@ public enum OrderController {
 	private List<Order> FinishedOrders = Collections
 			.synchronizedList(new ArrayList<Order>());
 
-	public Long getNextOrderNumber() {
-		IncrementOrderNumber();
-		return CurrentOrderNumber;
+	public UUID getNextOrderNumber() {
+		// IncrementOrderNumber();
+		return UUID.randomUUID();
 	}
 
 	public void IncrementOrderNumber() {
 		CurrentOrderNumber++;
-		++CurrentOrderNumber;
 	}
 
 	public void AddOrderToQueue(Order order) {
@@ -52,7 +51,7 @@ public enum OrderController {
 		now.add(Calendar.SECOND, -60);
 
 		for (Order i : Cooked) {
-			if (i.getCashier().getIdentity() == Identity) {
+			if (i.getCashier().getIdentity().equals(Identity)) {
 				Cooked.remove(i);
 				return i;
 
