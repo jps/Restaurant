@@ -1,1 +1,1 @@
-java clients/ServerClient
+java clients/ServerClient -s 40044

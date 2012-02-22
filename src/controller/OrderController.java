@@ -3,6 +3,7 @@ package controller;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Queue;
 import java.util.UUID;
@@ -46,30 +47,37 @@ public enum OrderController {
 		Cooked.add(order);
 	}
 
-	public Order GetCookedOrder(UUID Identity) {
+	public List<Order> GetCookedOrder(UUID Identity) {
 		Calendar now = Calendar.getInstance();
 		now.add(Calendar.SECOND, -60);
 
-		for (Order i : Cooked) {
+		List<Order> outOrders = new ArrayList<Order>();
+		
+		Iterator<Order> itr = Cooked.iterator();
+		
+		while(itr.hasNext())
+		{
+			Order i = itr.next();
+			
 			if (i.getCashier().getIdentity().equals(Identity)) {
-				Cooked.remove(i);
-				return i;
-
-			} else if (now.getTime().compareTo(i.getCookedAt()) > 0)// if after
-																	// 60
-																	// seconds
-																	// give the
-																	// order out
-																	// to
-																	// another
-																	// cashier
+				
+				outOrders.add(i);
+				itr.remove();
+				//Cooked.remove(i);
+				
+//				return i;
+				
+			} else if (now.getTime().compareTo(i.getCookedAt()) > 0)// if after 60 seconds give the order out to another cashier
 			{
-				Cooked.remove(i);
-				return i;
-			}
+				outOrders.add(i);
+				itr.remove();
+//			return i;
+			}				
 		}
-
+		if(outOrders.size() == 0)
 		return null;
+		
+		return outOrders;
 	}
 
 	public void AddOrderToFinished(Order order) {

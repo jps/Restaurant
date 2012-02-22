@@ -14,12 +14,27 @@ public class ServerClient {
 	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
-
-		new ServerClient();
+		
+		int port = 0;
+		
+		for(int i = 0; i < args.length ; ++i)
+			if(args[i].equals("-s"))
+			{
+				++i;
+				port = (Integer.parseInt(args[i]));
+			}
+		
+		if(port == 0)
+		{
+			System.out.println("Server Client could not be found the required input was not found");
+			System.out.println("the input -s [number] is required");
+		
+		}else
+			new ServerClient(port);
 
 	}
 
-	public ServerClient() throws IOException {
+	public ServerClient(int port) throws IOException {
 		// @SuppressWarnings("unused")
 		serverGUI = new ServerGUI(450, 0, 860, 410, "Server");
 
@@ -27,9 +42,9 @@ public class ServerClient {
 		boolean listening = true;
 
 		try {
-			serverSocket = new ServerSocket(40044);
+			serverSocket = new ServerSocket(port);
 		} catch (IOException e) {
-			System.err.println("Could not listen on port: 40044.");
+			System.err.println("Could not listen on port:" + port );
 			System.exit(-1);
 		}
 

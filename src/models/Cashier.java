@@ -108,9 +108,10 @@ public class Cashier extends RestaurantMember {
 		}*/
 
 	
-	public synchronized void addItemToFinishedOrders(Order order)
+	public synchronized void addItemToFinishedOrders(List<Order> orders)
 	{
-		CompletedOrders.add(order);
+		for(Order o : orders)
+			CompletedOrders.add(o);
 	}
 	
 	public synchronized void removeItemFromFinishedOrders(Order order)

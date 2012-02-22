@@ -5,6 +5,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.List;
+
 import sockets.*;
 
 import protocol.cashierProtocol;
@@ -122,9 +124,10 @@ public class CashierClient extends Thread {
 					}
 				if (fromServer.equals("Bye.")) // server is closing
 					break;
-				if (fromServer instanceof Order)
+				if (fromServer instanceof List<?>)
 				{
-					cashier.addItemToFinishedOrders((Order)fromServer);
+
+					cashier.addItemToFinishedOrders((List<Order>)fromServer);
 				}
 				fromUser = cashierProtocol.processInput(fromServer);
 				if (fromUser != null) {

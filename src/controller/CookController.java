@@ -36,13 +36,4 @@ public enum CookController {
 		return Cooks.remove(cook);
 	}
 
-	// TODO: would this be better if it was using notify all, should a random
-	// item be called on the method ?
-	public void notifyCooksOfNewOrder() {
-		for (Cook cook : Cooks) {
-			cook.notifyAll();
-			break;
-		}
-	}
-
 }
