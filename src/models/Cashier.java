@@ -118,6 +118,16 @@ public class Cashier extends RestaurantMember {
 		CompletedOrders.remove(order);
 	}
 	
+	public String[] GetCompletedOrdersList()
+	{
+		List<Order> finished = new ArrayList<Order>(FinishedOrders);
+		String[] fstrings = new String[FinishedOrders.size()];
+		for (int i = 0; i < finished.size(); i++) {
+			fstrings[i] = String.valueOf(finished.get(i).getOrderNumber());
+		}
+		return fstrings;	
+	}
+	
 	
 	public void CashierMessage(String action)
 	{

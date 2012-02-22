@@ -46,6 +46,7 @@ public class Cook extends RestaurantMember {
 				//request a new order
 				cookClient.outQueue.OutQueue.add("CookOrderRequest");
 				try {
+					cookClient.cookGUI.setCurrentlyCooking("Awaiting new order"); 
 					wait();
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
@@ -53,6 +54,8 @@ public class Cook extends RestaurantMember {
 				}
 			}else{
 				try {
+					//update the gui
+					cookClient.cookGUI.setCurrentlyCooking(order.getOrderNumber().toString());
 					wait(GetRandomWaitTime());
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block

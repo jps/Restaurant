@@ -13,25 +13,26 @@ public class Order implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private UUID OrderNumber;
-	private OrderStatus OrderStatus;
-	private Cashier Cashier;
-	private Date CookedAt;
+	private UUID orderNumber;
+	private OrderStatus orderStatus;
+	private Cashier cashier;
+	private Cook cook; 
+	private Date cookedAt;
 	
 		
 	Order(Cashier cashier){
-		OrderNumber = OrderController.INSTANCE.getNextOrderNumber();
+		orderNumber = OrderController.INSTANCE.getNextOrderNumber();
 		setOrderStatus(enumerations.OrderStatus.pending);
 		setCashier(cashier);		
 	}
 	
-	Order(UUID orderNumber){
+	Order(UUID OrderNumber){
 		setOrderStatus(enumerations.OrderStatus.pending);
-		OrderNumber = orderNumber;
+		orderNumber = OrderNumber;
 	}
 		
 	public UUID getOrderNumber() {
-		return OrderNumber;
+		return orderNumber;
 	}
 
 	/*
@@ -40,20 +41,25 @@ public class Order implements Serializable {
 	}*/
 	
 	public OrderStatus getOrderStatus() {
-		return OrderStatus;
+		return orderStatus;
 	}
 
-	public void setOrderStatus(OrderStatus orderStatus) {
-		OrderMessage( "changed order status to " + orderStatus );
-		OrderStatus = orderStatus;
+	public void setOrderStatus(OrderStatus OrderStatus) {
+		OrderMessage( "changed order status to " + OrderStatus );
+		orderStatus = OrderStatus;
 	}
 
 	public Cashier getCashier() {
-		return Cashier;
+		return cashier;
 	}
 
-	private void setCashier(Cashier cashier) {
-		Cashier = cashier;
+	private void setCashier(Cashier Cashier) {
+		cashier = Cashier;
+	}
+	
+	public void setCook(Cook Cook)
+	{
+		cook = Cook; 
 	}
 	
 	public void OrderMessage(String action)
@@ -63,12 +69,12 @@ public class Order implements Serializable {
 	
 	public void setCookedAtNow()
 	{
-		CookedAt  = new Date(); 
+		cookedAt  = new Date(); 
 	}
 	
 	public Date getCookedAt()
 	{
-		return CookedAt; 
+		return cookedAt; 
 	}
 	
 	

@@ -32,22 +32,52 @@ public class CashierClient extends Thread {
 			InterruptedException {
 		// TODO Auto-generated method stub
 
-		new CashierClient("Tom", "Taylor");
-
+		String first , second , hostname;
+		first = second = hostname = ""; 
+		int port = 0; 
+		
+		
+		for(int i = 0; i < args.length ; ++i)
+		{
+			if(args[i].equals("-h"))
+			{
+				++i;
+				hostname = args[i];
+			}else if(args[i].equals("-s"))
+			{
+				++i;
+				port = (Integer.parseInt(args[i]));
+			}
+			else if(args[i].equals("-fn"))
+			{
+				++i;
+				first = args[i];
+			}else if(args[i].equals("-sn"))
+			{
+				++i;
+				second = args[i];
+			}
+		}
+		
+		if(first == "" || second == "" || hostname == "" || port == 0 )
+		{
+			System.out.println("The Cashier Client could not start the required input was not found");
+			System.out.println("Input should look like: -h host -s port -fn firstname -sn surname");
+		}else
+			new CashierClient(first , second, hostname, port);			
 	}
 
-	public CashierClient(String FirstName, String SecondName)
+	public CashierClient(String FirstName, String SecondName, String Hostname , int Port)
 			throws IOException, InterruptedException {
 
-		Init(FirstName, SecondName);
+		Init(FirstName, SecondName, Hostname, Port);
 
 	}
 
-	private synchronized void Init(String FirstName, String SecondName)
+	private synchronized void Init(String FirstName, String SecondName, String HostName, int Port)
 			throws InterruptedException, IOException {
-		@SuppressWarnings("unused")
-		CashierGUI cashierGUI = new CashierGUI(0, 0, 200, 410, "Cashier 1");
-		Cashier casher = new Cashier(FirstName, SecondName, this);
+		CashierGUI cashierGUI = new CashierGUI(0, 0, 350, 410, FirstName +" "+SecondName);
+		Cashier cashier = new Cashier(FirstName, SecondName, this);
 		// CashierController.INSTANCE.CashierSignIn(ca1);
 		// ca1.start();
 
@@ -56,7 +86,7 @@ public class CashierClient extends Thread {
 		ObjectInputStream in = null;
 
 		try {
-			RSocket = new Socket("PandaLaptop", 40044);
+			RSocket = new Socket(HostName, Port );
 			out = new ObjectOutputStream(RSocket.getOutputStream());
 			in = new ObjectInputStream(RSocket.getInputStream());
 		} catch (UnknownHostException e) {
@@ -79,7 +109,7 @@ public class CashierClient extends Thread {
 		// out.flush();
 
 		// try and sign in
-		outQueue.OutQueue.add(casher); // addObjcetToOutQueue(ca1);
+		outQueue.OutQueue.add(cashier); // addObjcetToOutQueue(ca1);
 
 		while (true) {
 			fromServer = inQueue.GetNextItemFromQueue();
@@ -87,14 +117,14 @@ public class CashierClient extends Thread {
 				if (fromServer instanceof String)
 					if (fromServer.equals("SignedIn")) {
 						System.out.print("Signed in");
-						casher.setLoggedIn();
-						casher.start(); // start the cashier server
+						cashier.setLoggedIn();
+						cashier.start(); // start the cashier server
 					}
 				if (fromServer.equals("Bye.")) // server is closing
 					break;
 				if (fromServer instanceof Order)
 				{
-					casher.addItemToFinishedOrders((Order)fromServer);
+					cashier.addItemToFinishedOrders((Order)fromServer);
 				}
 				fromUser = cashierProtocol.processInput(fromServer);
 				if (fromUser != null) {
@@ -102,6 +132,7 @@ public class CashierClient extends Thread {
 					outQueue.OutQueue.add(fromUser);
 				}
 			}
+			cashierGUI.update(cashier);
 			wait(500);// wait for 1/2 a second
 		}
 

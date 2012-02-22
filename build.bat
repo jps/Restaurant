@@ -1,0 +1,1 @@
+"C:/Program Files/Java/jdk1.7.0_03/bin/javac.exe" -source 1.6 -Xlint:unchecked src\clients\*.java src\controller\*.java src\enumerations\*.java src\models\*.java src\protocol\*.java src\sockets\*.java

@@ -1,6 +1,6 @@
 //package def;
 
-import models.*;
+
 import clients.*;
 
 
@@ -42,9 +42,9 @@ public class Main {
 			//BaseClient testClient = new BaseClient();
 			//BaseClient testClient1 = new BaseClient();
 			@SuppressWarnings("unused")
-			CashierGUI cashierGUI = new CashierGUI(0,0,200,410, "Cashier 1"); 
+			CashierGUI cashierGUI = new CashierGUI(0,0,410,200, "Cashier 1"); 
 			@SuppressWarnings("unused")
-			CashierGUI cashierClient1 = new CashierGUI(220,0,200,410, "Cashier 2");
+			CashierGUI cashierClient1 = new CashierGUI(220,0,410,200, "Cashier 2");
 			
 			@SuppressWarnings("unused")
 			CookGUI cookGUI = new CookGUI(0,420,200, 410, "cookClientTest");

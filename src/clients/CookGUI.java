@@ -6,7 +6,7 @@ package clients;
 import javax.swing.*;
 
 import java.awt.*;
-import java.awt.event.*;
+//import java.awt.event.*;
 
 /**
  * @author Administrator
@@ -22,7 +22,7 @@ public class CookGUI {
 	private static int W = 400;
 	protected JFrame frame;// = new JFrame();
 	private JLabel TestLabel;
-	private JList pendingList;
+	private JLabel textArea;
 
 	public CookGUI() {
 		// empty constructor
@@ -42,11 +42,13 @@ public class CookGUI {
 
 		frame = new JFrame(Name);
 		frame.setName(Name);
+		frame.setLayout(null);
 		// frame.setSize(Width,Height);
 		frame.setBounds(X, Y, Width, Height);
 		Dimension minSize = new Dimension();
 		minSize.setSize(Width, Height);
 		frame.setMinimumSize(minSize);
+
 		// frame.setMaximumSize(maximumSize);
 		frame.setBounds(X, Y, Width, Height);
 		frame.getContentPane().setBackground(new Color(152, 251, 152));
@@ -56,15 +58,21 @@ public class CookGUI {
 
 		// 3. Create components and put them in the frame.
 
-		pendingList = new JList();
-		JScrollPane pendingScroller = new JScrollPane(pendingList);
-		pendingScroller.setBounds(25, 60, 150, 300);
-		frame.add(pendingScroller);
+		// pendingList = new JList();
+		// JScrollPane pendingScroller = new JScrollPane(pendingList);
+		// pendingScroller.setBounds(10, 10, 150, 300);
+		// frame.add(pendingScroller);
 
 		// ...create emptyLabel...
+		Font font = new Font("Verdana", Font.BOLD, 15);
+		TestLabel = new JLabel("Currently Cooking");
+		TestLabel.setFont(font);
+		TestLabel.setBounds(10, 10, 200, 40);
+		frame.add(TestLabel);
 
-		TestLabel = new JLabel("Test Label");
-		frame.add(TestLabel, BorderLayout.CENTER);
+		textArea = new JLabel("None");
+		textArea.setBounds(10, 60, 300, 20);
+		frame.add(textArea);
 
 		// 4. Size the frame.
 
@@ -72,6 +80,10 @@ public class CookGUI {
 
 		// 5. Show it.
 		frame.setVisible(true);
+	}
+
+	public void setCurrentlyCooking(String text) {
+		textArea.setText(text);
 	}
 
 }

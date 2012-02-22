@@ -1,0 +1,1 @@
+javac -source 1.5 -Xlint:unchecked src\clients\*.java src\controller\*.java src\enumerations\*.java src\models\*.java src\protocol\*.java src\sockets\*.java

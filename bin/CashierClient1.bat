@@ -1,0 +1,1 @@
+java clients/CashierClient -h PandaLaptop -s 40044 -fn Chris -sn Davis
